@@ -1,5 +1,3 @@
-
-
 class App(object):
 
     # App variables
