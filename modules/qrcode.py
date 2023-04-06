@@ -42,4 +42,4 @@ class QRCode(object):
 
 if __name__ == "__main__":
     qr = QRCode()
-    qr.read(camera=1)
+    qr.read(0)

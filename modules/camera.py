@@ -465,4 +465,4 @@ if __name__ == "__main__":
     normal_frame = cam.get_normal_frame(capture)
     gray_frame = cam.get_gray_frame(capture)
     ascii_frame = cam.get_ascii_frame(normal_frame, gray_frame, color=False)
-    cam.save_ascii_image(ascii_frame, "asciiiii")
+    cam.save_ascii_image(ascii_frame, "example")

@@ -1,3 +1,6 @@
+# Firestore Credentials
+ressources/database_credentials.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
