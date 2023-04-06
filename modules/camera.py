@@ -11,11 +11,17 @@ class Camera(object):
         Args:
             camera_index (int, optional): Specify the camera index. Defaults to 0.
         """
+
+        # Initialize the camera.
         if camera_index == -1:
+            # Get the first camera available if none is specified.
             cameras_available = CameraUtils.list_cameras()
             self.camera_index = cameras_available[0]
         else:
+            # Use the specified camera.
             self.camera_index = camera_index
+
+        # Initialize class variables.
         self.max_clear_int = -1
         self.scale = scale
         self.scale_factor = 0.025
@@ -26,6 +32,8 @@ class Camera(object):
         Returns:
             cv2.VideoCapture: The frame.
         """
+
+        # Capture the frame using OpenCv python module.
         capture = cv2.VideoCapture(self.camera_index)
         return capture
 
@@ -38,11 +46,19 @@ class Camera(object):
         Returns:
             cv2.Frame: The frame.
         """
+
+        # Get the frame from the camera.
         (ret, frame) = capture.read()
+
+        # Resizing the frame.
         fx = self.scale_factor * self.scale + 0.02 * self.scale
         fy = self.scale_factor * self.scale
         frame = cv2.resize(frame, (0, 0), fx=fx, fy=fy)
+
+        # Flip the frame.
         frame = cv2.flip(frame, 1)
+
+        # Return the frame.
         return frame
 
     def get_gray_frame(self, capture):
@@ -54,12 +70,22 @@ class Camera(object):
         Returns:
             cv2.Frame: The gray frame.
         """        """"""
+
+        # Get the frame from the camera.
         (ret, frame) = capture.read()
+
+        # Resizing the frame.
         fx = self.scale_factor * self.scale + 0.02 * self.scale
         fy = self.scale_factor * self.scale
         frame = cv2.resize(frame, (0, 0), fx=fx, fy=fy)
+
+        # Flip the frame.
         frame = cv2.flip(frame, 1)
+
+        # Convert the frame to gray.
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Return the frame.
         return gray_frame
 
     def get_ascii_frame(self, normal_frame, gray_frame, color: bool = True) -> str:
@@ -74,25 +100,35 @@ class Camera(object):
             str: The ASCII frame.
         """
 
+        # Initialize the final frame by creating an empty new string.
         final_frame = ""
 
+        # Loop through the frame.
         row_number = 0
         for row in normal_frame:
             line_number = 0
 
             for pixel in row:
+
+                # Convert to ascii characters.
                 if color:
+
+                    # Get the color escape sequence and add it to the final frame. (Using colors)
                     color_escaped = CameraUtils.get_color_escape(
                         pixel[2], pixel[1], pixel[0])
                     final_frame += f"""{color_escaped}{CameraUtils.convert_ascii(gray_frame[row_number][line_number])}\033[0m"""
                 else:
+
+                    # Add the ascii character to the final frame. (Without colors)
                     final_frame += CameraUtils.convert_ascii(
                         gray_frame[row_number][line_number])
                 line_number += 1
 
+            # Add a new line to the final frame to add the next values.
             final_frame += "\n"
             row_number += 1
 
+        # Return the final frame.
         return final_frame
 
     def save_ascii_image(self, ascii_frame: str, file_name: str = "ascii_image"):
@@ -103,17 +139,25 @@ class Camera(object):
             file_name (str, optional): The file name. Defaults to "ascii_image".
         """
 
+        # Initialize the font.
         font = ImageFont.truetype(
             "../resources/fonts/CartographCF-DemiBold.ttf", 55)
+        
+        # Create the image.
         img = Image.new("RGB", (1920 * self.scale, 875 *
                         self.scale), color=(0, 0, 0))
+        
+        # Draw the text.
         draw = ImageDraw.Draw(img)
         draw.text((0, 0), ascii_frame, (255, 255, 255), font=font)
+
+        # Save the image.
         img.save(f"./saves/{file_name}.png")
 
 
 class CameraUtils(object):
 
+    # Color look-up table.
     CLUT = [
         # color look-up table
         # 8-bit, RGB hex
@@ -405,12 +449,16 @@ class CameraUtils(object):
         Returns:
             list: List of cameras.
         """
+
+        # Try to open each camera and check if it works. If it does, add it to the list.
         cameras = []
         for i in range(10):
             cap = cv2.VideoCapture(i)
             if cap.read()[0]:
                 cameras.append(i)
             cap.release()
+
+        # Return the list of cameras.
         return cameras
 
     @staticmethod
@@ -423,14 +471,32 @@ class CameraUtils(object):
         Returns:
             str: The ASCII character.
         """
+
+        # Defining the characters to use.
         chars = "  .:-=+*#%@"
+
+        # Convert the pixel value to a brightness value.
         brightness = pixel / 255.0
+
+        # Get the character to use.
         chars_index = int((len(chars) - 1) * brightness)
+
+        # Return the character.
         return chars[chars_index]
 
     @staticmethod
     def get_window_size():
+        """Get the size of the terminal window.
+
+        Returns:
+            int: The number of rows.
+            int: The number of columns.
+        """
+
+        # Get the size of the terminal window.
         rows, columns = os.popen("stty size", "r").read().split()
+
+        # Return the size.
         return int(rows), int(columns)
 
     @staticmethod
@@ -443,6 +509,8 @@ class CameraUtils(object):
         Returns:
             str: The HEX value.
         """
+
+        # Convert the RGB value to HEX and return it.
         return '%02x%02x%02x' % rgb
 
     @staticmethod
@@ -452,8 +520,12 @@ class CameraUtils(object):
         Args:
             n (int, optional): Number of line(s) to clear. Defaults to 1.
         """
+
+        # Defining the escape sequences.
         LINE_UP = '\033[1A'
         LINE_CLEAR = '\x1b[2K'
+
+        # Clear the line(s).
         for i in range(n):
             print(LINE_UP, end=LINE_CLEAR)
 
