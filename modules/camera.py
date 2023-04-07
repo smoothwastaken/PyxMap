@@ -37,14 +37,14 @@ class Camera(object):
         capture = cv2.VideoCapture(self.camera_index)
         return capture
 
-    def get_normal_frame(self, capture: cv2.VideoCapture):
+    def get_normal_frame(self, capture: cv2.VideoCapture) -> cv2.VideoCapture:
         """Get the frame from the camera.
 
         Args:
             capture (cv2.VideoCapture): The capture object.
 
         Returns:
-            cv2.Frame: The frame.
+            cv2.VideoCapture: The frame.
         """
 
         # Get the frame from the camera.
@@ -61,7 +61,7 @@ class Camera(object):
         # Return the frame.
         return frame
 
-    def get_gray_frame(self, capture):
+    def get_gray_frame(self, capture: cv2.VideoCapture) -> cv2.VideoCapture:
         """Get the gray frame from the camera.
 
         Args:
@@ -88,7 +88,7 @@ class Camera(object):
         # Return the frame.
         return gray_frame
 
-    def get_ascii_frame(self, normal_frame, gray_frame, color: bool = True) -> str:
+    def get_ascii_frame(self, normal_frame: cv2.VideoCapture, gray_frame: cv2.VideoCapture, color: bool = True) -> str:
         """Get the ASCII frame from the camera.
 
         Args:
@@ -131,7 +131,7 @@ class Camera(object):
         # Return the final frame.
         return final_frame
 
-    def save_ascii_image(self, ascii_frame: str, file_name: str = "ascii_image"):
+    def save_ascii_image(self, ascii_frame: str, file_name: str = "ascii_image") -> None:
         """Save the ASCII frame as an image using Pillow (PIL).
 
         Args:
@@ -485,7 +485,7 @@ class CameraUtils(object):
         return chars[chars_index]
 
     @staticmethod
-    def get_window_size():
+    def get_window_size() -> tuple(int, int):
         """Get the size of the terminal window.
 
         Returns:
@@ -497,10 +497,10 @@ class CameraUtils(object):
         rows, columns = os.popen("stty size", "r").read().split()
 
         # Return the size.
-        return int(rows), int(columns)
+        return (int(rows), int(columns))
 
     @staticmethod
-    def rgb_to_hex(rgb):
+    def rgb_to_hex(rgb: int) -> str:
         """Convert RGB to HEX.
 
         Args:
@@ -514,7 +514,7 @@ class CameraUtils(object):
         return '%02x%02x%02x' % rgb
 
     @staticmethod
-    def clear_line(n=1):
+    def clear_line(n: int = 1):
         """Clear the line.
 
         Args:

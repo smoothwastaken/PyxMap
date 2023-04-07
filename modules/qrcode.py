@@ -6,7 +6,7 @@ class QRCode(object):
     def __init__(self) -> None:
         pass
 
-    def read(self, file: str = None, camera: int = 0, showCameraWindow: bool = False):
+    def read(self, file: str = None, camera: int = 0, showCameraWindow: bool = False) -> None:
         """This function allows to read QR Codes.
 
         Args:

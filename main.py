@@ -10,7 +10,7 @@ class App(object):
         # Load the config file
         self._load_config()
 
-    def _load_config(self):
+    def _load_config(self) -> None:
         # Load the config file
         with open("config.json", "r") as f:
             self.config = json.load(f)

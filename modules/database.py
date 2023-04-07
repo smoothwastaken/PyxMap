@@ -13,7 +13,7 @@ class Database(object):
         """
         self._initialize_firestore()
 
-    def _initialize_firestore(self):
+    def _initialize_firestore(self) -> None:
         """Initialize the firestore connection.
         """
 
@@ -33,7 +33,7 @@ class Database(object):
         # Create the firestore client.
         self.db = firestore.Client(credentials=credentials)
 
-    def get_pyxpic(self, pyxpic_id):
+    def get_pyxpic(self, pyxpic_id: str) -> dict:
         """Get a pyxpic from the database.
 
         Args:
@@ -50,7 +50,7 @@ class Database(object):
         doc = doc_ref.get()
         return doc.to_dict()
 
-    def add_pyxpic(self, pyxpic_id, owner_id, raw_image):
+    def add_pyxpic(self, pyxpic_id: str, owner_id: str, raw_image: list) -> str:
         """Add a pyxpic to the database.
 
         Args:
@@ -80,7 +80,7 @@ class Database(object):
 
         return pyxpic_id
 
-    def update_pyxpic(self, pyxpic_id, data):
+    def update_pyxpic(self, pyxpic_id: str, data: dict) -> None:
         """Update a pyxpic in the database.
 
         Args:
@@ -94,7 +94,7 @@ class Database(object):
         # Update the pyxpic with the new data.
         doc_ref.update(data)
 
-    def delete_pyxpic(self, pyxpic_id):
+    def delete_pyxpic(self, pyxpic_id: str) -> None:
         """Delete a pyxpic from the database.
 
         Args:
@@ -107,7 +107,7 @@ class Database(object):
         # Delete the fetched pyxpic.
         doc_ref.delete()
 
-    def fetch_all_pyxpic(self):
+    def fetch_all_pyxpic(self) -> dict:
         """Fetch all pyxpic from the database.
 
         Returns:
@@ -121,7 +121,7 @@ class Database(object):
         # Return the all pyxpic data in a dictionary.
         return {doc.id: doc.to_dict() for doc in docs}
 
-    def fetch_user_pyxpic(self, user_id):
+    def fetch_user_pyxpic(self, user_id: str) -> dict:
         """Fetch all pyxpic from the database.
 
         Args:
@@ -140,7 +140,7 @@ class Database(object):
         # Return the all pyxpic data in a dictionary.
         return {doc.id: doc.to_dict() for doc in docs}
 
-    def is_uuid_already_used(self, pyxpic_id):
+    def is_uuid_already_used(self, pyxpic_id: str) -> bool:
         """Check if a pyxpic id is already used.
 
         Args:
@@ -157,7 +157,7 @@ class Database(object):
 class DatabaseUtils(object):
 
     @staticmethod
-    def create_random_pyxpic_id():
+    def create_random_pyxpic_id() -> str:
         """Create a random pyxpic id.
 
         Returns:
