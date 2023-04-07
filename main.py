@@ -1,3 +1,5 @@
+import json
+
 class App(object):
 
     # App variables
@@ -6,4 +8,9 @@ class App(object):
     # Initialisation of the app
     def __init__(self) -> None:
         # Load the config file
-        pass
+        self._load_config()
+
+    def _load_config(self):
+        # Load the config file
+        with open("config.json", "r") as f:
+            self.config = json.load(f)
