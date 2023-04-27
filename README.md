@@ -11,5 +11,5 @@ Then, you need to install the Pyzbar library that is different depending on the 
 brew install zbar
 
 # Windows OS version
-pip install pyzbar
+python -m pip install pyzbar
 ```

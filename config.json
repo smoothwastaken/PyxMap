@@ -1,6 +1,7 @@
 {
     "name":"PyxMap",
-    "version": "BETA0.1",
-    "author": ["Arque-Ferradou Cléry", "Lejuste Nathanaël", "... Ulysse"],
-    "description": "PyxMap is a N.S.I. project."
+    "version": "1.5",
+    "author": ["Arque-Ferradou Cléry", "Lejuste Nathanaël", "Chasseigne Ulysse", "De Beaumont du Repaire Carla"],
+    "description": "PyxMap is a N.S.I. project!",
+    "darwin_voice" : true
 }

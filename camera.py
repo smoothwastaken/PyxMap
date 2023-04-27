@@ -1,3 +1,20 @@
+# PyxMap
+# Copyright © 2023 Cléry Arque-Ferradou, Nathanaël Lejuste, De Beaumont du Repaire Carla, Chasseigne Ulysse
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import cv2
 import os
 import time
@@ -35,6 +52,7 @@ class Camera(object):
 
         # Capture the frame using OpenCv python module.
         capture = cv2.VideoCapture(self.camera_index)
+        time.sleep(1)
         return capture
 
     def get_normal_frame(self, capture: cv2.VideoCapture) -> cv2.VideoCapture:
@@ -125,7 +143,8 @@ class Camera(object):
                 line_number += 1
 
             # Add a new line to the final frame to add the next values.
-            final_frame += "\n"
+            if len(row) != 0:
+                final_frame += "\n"
             row_number += 1
 
         # Return the final frame.
@@ -141,12 +160,12 @@ class Camera(object):
 
         # Initialize the font.
         font = ImageFont.truetype(
-            "../resources/fonts/CartographCF-DemiBold.ttf", 55)
-        
+            "./resources/fonts/CartographCF-DemiBold.ttf", 55)
+
         # Create the image.
         img = Image.new("RGB", (1920 * self.scale, 875 *
                         self.scale), color=(0, 0, 0))
-        
+
         # Draw the text.
         draw = ImageDraw.Draw(img)
         draw.text((0, 0), ascii_frame, (255, 255, 255), font=font)
@@ -154,10 +173,18 @@ class Camera(object):
         # Save the image.
         img.save(f"./saves/{file_name}.png")
 
+        # Open the image.
+        os.system(f'open ./saves/{file_name}.png')
+
 
 class CameraUtils(object):
 
-    # Color look-up table.
+    # <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
+    # Color look-up table used to convert RGB to ANSI escape sequences.
+    # So we can use colors in the terminal to make the ASCII image look better.
+    # Maybe I won't use it in the future, but I'll keep it here for now.
+    # You can get more info: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+
     CLUT = [
         # color look-up table
         # 8-bit, RGB hex
@@ -427,6 +454,8 @@ class CameraUtils(object):
         ('255', 'eeeeee'),
     ]
 
+    # <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
+
     @staticmethod
     def get_color_escape(r: int, g: int, b: int, background: bool = False) -> str:
         """Get the escape sequence for a color.
@@ -485,7 +514,7 @@ class CameraUtils(object):
         return chars[chars_index]
 
     @staticmethod
-    def get_window_size() -> tuple(int, int):
+    def get_window_size() -> tuple:
         """Get the size of the terminal window.
 
         Returns:
@@ -498,6 +527,29 @@ class CameraUtils(object):
 
         # Return the size.
         return (int(rows), int(columns))
+
+    @staticmethod
+    def string_to_dict(input_string: str) -> dict:
+        """Convert a string to a dictionary.
+
+        Args:
+            input_string (str): The string to convert.
+
+        Returns:
+            dict: The string converted to a dictionary.
+        """
+        # Create an empty dictionary.
+        result = {}
+
+        # Split the string into lines.
+        lines = input_string.split('\n')
+
+        # Convert the lines to a dictionary.
+        for index, line in enumerate(lines):
+            result[str(index)] = list(line)
+
+        # Return the dictionary.
+        return result
 
     @staticmethod
     def rgb_to_hex(rgb: int) -> str:
@@ -531,10 +583,12 @@ class CameraUtils(object):
 
 
 if __name__ == "__main__":
-    cam = Camera(camera_index=0, scale=4)
-    capture = cam.capture()
-    time.sleep(1)
-    normal_frame = cam.get_normal_frame(capture)
-    gray_frame = cam.get_gray_frame(capture)
-    ascii_frame = cam.get_ascii_frame(normal_frame, gray_frame, color=False)
-    cam.save_ascii_image(ascii_frame, "example")
+    for i in range(1):
+        cam = Camera(scale=5)
+        capture = cam.capture()
+        normal_frame = cam.get_normal_frame(capture)
+        gray_frame = cam.get_gray_frame(capture)
+        ascii_frame = cam.get_ascii_frame(
+            normal_frame, gray_frame, color=False)
+        print(ascii_frame)
+        cam.save_ascii_image(ascii_frame, f'test_cam_module.png')

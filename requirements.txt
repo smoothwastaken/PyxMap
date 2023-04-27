@@ -1,2 +1,11 @@
 Pillow
 opencv-python
+pygame
+os
+json
+google.cloud
+google.oauth2
+datetime
+uuid
+time
+PIL

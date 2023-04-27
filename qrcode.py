@@ -1,5 +1,23 @@
+# PyxMap
+# Copyright © 2023 Cléry Arque-Ferradou, Nathanaël Lejuste, De Beaumont du Repaire Carla, Chasseigne Ulysse
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import cv2
 from pyzbar import pyzbar
+from camera import CameraUtils
 
 
 class QRCode(object):
@@ -41,10 +59,6 @@ class QRCode(object):
                 cv2.putText(frame, barcode_info, (x + 6, y - 15),
                             font, 2.0, (255, 255, 255), 1)
 
-                # Print the barcode type and data to the terminal.
-                with open("barcode_result.txt", mode='w') as file:
-                    file.write("Recognized Barcode:" + barcode_info)
-
             # If the user presses "q", quit.
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -63,4 +77,5 @@ class QRCode(object):
 
 if __name__ == "__main__":
     qr = QRCode()
-    qr.read(0)
+    result = qr.read(camera=CameraUtils.list_cameras()[0])
+    print(result)
